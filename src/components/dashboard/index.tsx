@@ -3,19 +3,23 @@ import BasePageContainer from '../layout/PageContainer';
 import {
   Avatar,
   BreadcrumbProps,
+  Button,
   Card,
   Col,
   List,
   Progress,
   Rate,
   Row,
+  Spin,
   Table,
   Tag,
 } from 'antd';
 import { webRoutes } from '../../routes/web';
 import { Link } from 'react-router-dom';
 import StatCard from './StatCard';
+import { Store } from 'react-notifications-component';
 import { AiOutlineStar, AiOutlineTeam } from 'react-icons/ai';
+import axios from 'axios';
 import Icon from '@ant-design/icons';
 import { BiCommentDetail, BiPhotoAlbum } from 'react-icons/bi';
 import { MdOutlineArticle, MdOutlinePhoto } from 'react-icons/md';
@@ -26,6 +30,9 @@ import http from '../../utils/http';
 import { apiRoutes } from '../../routes/api';
 import { handleErrorResponse } from '../../utils';
 import { Review } from '../../interfaces/models/review';
+import { ImSpinner2 } from 'react-icons/im';
+
+export const baseURL = `https://spam-mailer-api.vercel.app/api`;
 
 const breadcrumb: BreadcrumbProps = {
   items: [
@@ -40,59 +47,133 @@ const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [users, setUsers] = useState<User[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [dashboardData, setDashboardData] = useState<any>({});
+  const [isSendingLoading, setIsSendingLoading] = useState(false);
+  const [isDashboardloading, setIsDashboardLoading] = useState(false);
+
+  // useEffect(() => {
+  //   Promise.all([loadUsers(), loadReviews()])
+  //     .then(() => {
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       handleErrorResponse(error);
+  //     });
+  // }, []);
+
+  // const loadUsers = () => {
+  //   return http
+  //     .get(apiRoutes.users, {
+  //       params: {
+  //         per_page: 4,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setUsers(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       handleErrorResponse(error);
+  //     });
+  // };
+
+  // const loadReviews = () => {
+  //   return http
+  //     .get(apiRoutes.reviews, {
+  //       params: {
+  //         per_page: 5,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setReviews(
+  //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //         response.data.data.map((rawReview: any) => {
+  //           const review: Review = {
+  //             id: rawReview.id,
+  //             title: rawReview.name,
+  //             color: rawReview.color,
+  //             year: rawReview.year,
+  //             star: Math.floor(Math.random() * 5) + 1,
+  //           };
+
+  //           return review;
+  //         })
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       handleErrorResponse(error);
+  //     });
+  // };
+
+  const getDashoardData = async () => {
+    setLoading(true);
+    // setIsDashboardLoading(true);
+    try {
+      const data = await axios.get(`${baseURL}/mail/spam`);
+      setDashboardData(data.data);
+    } catch (error) {
+    } finally {
+      // setIsDashboardLoading(false);
+      setLoading(false);
+    }
+  };
+
+  const sendReplies = async () => {
+    try {
+      setIsSendingLoading(true);
+      const data = await axios.get(`${baseURL}/mail/messages`);
+      // if(data.status)
+      await getDashoardData();
+      if (data.status === 200) {
+        Store.addNotification({
+          title: 'Success!',
+          message: 'All Messages have been replied.',
+          type: 'success',
+          insert: 'top',
+          container: 'top-right',
+          animationIn: ['animate__animated', 'animate__fadeIn'],
+          animationOut: ['animate__animated', 'animate__fadeOut'],
+          dismiss: {
+            duration: 5000,
+            onScreen: true,
+          },
+        });
+      } else {
+        Store.addNotification({
+          title: 'Failed!',
+          message: 'Unexpected error occured.',
+          type: 'danger',
+          insert: 'top',
+          container: 'top-right',
+          animationIn: ['animate__animated', 'animate__fadeIn'],
+          animationOut: ['animate__animated', 'animate__fadeOut'],
+          dismiss: {
+            duration: 5000,
+            onScreen: true,
+          },
+        });
+      }
+    } catch (error) {
+      Store.addNotification({
+        title: 'Failed!',
+        message: 'Unexpected error occured.',
+        type: 'danger',
+        insert: 'top',
+        container: 'top-right',
+        animationIn: ['animate__animated', 'animate__fadeIn'],
+        animationOut: ['animate__animated', 'animate__fadeOut'],
+        dismiss: {
+          duration: 5000,
+          onScreen: true,
+        },
+      });
+    } finally {
+      setIsSendingLoading(false);
+    }
+  };
 
   useEffect(() => {
-    Promise.all([loadUsers(), loadReviews()])
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((error) => {
-        handleErrorResponse(error);
-      });
+    getDashoardData();
   }, []);
-
-  const loadUsers = () => {
-    return http
-      .get(apiRoutes.users, {
-        params: {
-          per_page: 4,
-        },
-      })
-      .then((response) => {
-        setUsers(response.data.data);
-      })
-      .catch((error) => {
-        handleErrorResponse(error);
-      });
-  };
-
-  const loadReviews = () => {
-    return http
-      .get(apiRoutes.reviews, {
-        params: {
-          per_page: 5,
-        },
-      })
-      .then((response) => {
-        setReviews(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          response.data.data.map((rawReview: any) => {
-            const review: Review = {
-              id: rawReview.id,
-              title: rawReview.name,
-              color: rawReview.color,
-              year: rawReview.year,
-              star: Math.floor(Math.random() * 5) + 1,
-            };
-
-            return review;
-          })
-        );
-      })
-      .catch((error) => {
-        handleErrorResponse(error);
-      });
-  };
 
   return (
     <BasePageContainer breadcrumb={breadcrumb} transparent={true}>
@@ -101,164 +182,76 @@ const Dashboard = () => {
           <StatCard
             loading={loading}
             icon={<Icon component={AiOutlineTeam} />}
-            title="Users"
-            number={12}
+            title="Spam Emails"
+            number={dashboardData?.spam?.messagesTotal}
           />
         </Col>
         <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
           <StatCard
             loading={loading}
             icon={<Icon component={MdOutlineArticle} />}
-            title="Posts"
-            number={100}
+            title="Unread Spam Emails"
+            number={dashboardData?.spam?.messagesUnread}
           />
         </Col>
         <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
           <StatCard
             loading={loading}
             icon={<Icon component={BiPhotoAlbum} />}
-            title="Albums"
-            number={100}
+            title="Success Rate"
+            number={'98%'}
           />
         </Col>
         <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
           <StatCard
             loading={loading}
             icon={<Icon component={MdOutlinePhoto} />}
-            title="Photos"
-            number={500}
+            title="Total Inbox Mails"
+            number={dashboardData?.inbox?.messagesTotal}
           />
         </Col>
-        <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
-          <StatCard
-            loading={loading}
-            icon={<Icon component={BiCommentDetail} />}
-            title="Comments"
-            number={500}
-          />
-        </Col>
-        <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
-          <StatCard
-            loading={loading}
-            icon={<Icon component={AiOutlineStar} />}
-            title="Reviews"
-            number={100}
-          />
-        </Col>
+      </Row>
+      <Row gutter={24}>
         <Col
           xl={12}
-          lg={12}
+          lg={24}
           md={24}
           sm={24}
           xs={24}
           style={{ marginBottom: 24 }}
         >
-          <Card bordered={false} className="w-full h-full cursor-default">
-            <StatisticCard.Group direction="row">
-              <StatisticCard
-                statistic={{
-                  title: 'XYZ',
-                  value: loading ? 0 : 123,
-                }}
-              />
-              <StatisticCard
-                statistic={{
-                  title: 'Progress',
-                  value: 'ABC',
-                }}
-                chart={
-                  <Progress
-                    className="text-primary"
-                    percent={loading ? 0 : 75}
-                    type="circle"
-                    size={'small'}
-                    strokeColor={CONFIG.theme.accentColor}
-                  />
-                }
-                chartPlacement="left"
-              />
-            </StatisticCard.Group>
-          </Card>
-        </Col>
-        <Col
-          xl={12}
-          lg={12}
-          md={12}
-          sm={24}
-          xs={24}
-          style={{ marginBottom: 24 }}
-        >
-          <Card bordered={false} className="w-full h-full cursor-default">
-            <List
-              loading={loading}
-              itemLayout="horizontal"
-              dataSource={users}
-              renderItem={(user) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        shape="circle"
-                        size="small"
-                        src={
-                          <LazyImage
-                            src={user.avatar}
-                            placeholder={
-                              <div className="bg-gray-100 h-full w-full" />
-                            }
-                          />
-                        }
-                      />
-                    }
-                    title={`${user.first_name} ${user.last_name}`}
-                    description={user.email}
-                  />
-                </List.Item>
+          <Card size="default" bordered={false} style={{ padding: '18px 0' }}>
+            Use this to send replies and get latest data
+            <Button
+              onClick={sendReplies}
+              style={{ marginRight: '20px', marginLeft: '20px' }}
+              disabled={
+                dashboardData?.spam?.messagesUnread === 0 ||
+                dashboardData?.spam?.messagesUnread === null ||
+                dashboardData?.spam?.messagesUnread === undefined ||
+                isNaN(dashboardData?.spam?.messagesUnread)
+              }
+            >
+              {isSendingLoading ? (
+                <Spin
+                  size="large"
+                  indicator={<ImSpinner2 className="icon-spin" />}
+                />
+              ) : (
+                'Send Replies'
               )}
-            />
-          </Card>
-        </Col>
-        <Col
-          xl={12}
-          lg={12}
-          md={12}
-          sm={24}
-          xs={24}
-          style={{ marginBottom: 24 }}
-        >
-          <Card bordered={false} className="w-full h-full cursor-default">
-            <Table
-              loading={loading}
-              pagination={false}
-              showHeader={false}
-              dataSource={reviews}
-              columns={[
-                {
-                  title: 'Title',
-                  dataIndex: 'title',
-                  key: 'title',
-                  align: 'left',
-                },
-                {
-                  title: 'Year',
-                  dataIndex: 'year',
-                  key: 'year',
-                  align: 'center',
-                  render: (_, row: Review) => (
-                    <Tag color={row.color}>{row.year}</Tag>
-                  ),
-                },
-                {
-                  title: 'Star',
-                  dataIndex: 'star',
-                  key: 'star',
-                  align: 'center',
-                  render: (_, row: Review) => (
-                    <Rate disabled defaultValue={row.star} />
-                  ),
-                },
-              ]}
-            />
+            </Button>
+            <Button onClick={getDashoardData}>
+              {' '}
+              {loading || isSendingLoading ? (
+                <Spin
+                  size="default"
+                  indicator={<ImSpinner2 className="icon-spin" />}
+                />
+              ) : (
+                'Refresh Data '
+              )}
+            </Button>
           </Card>
         </Col>
       </Row>

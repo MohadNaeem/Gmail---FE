@@ -1,5 +1,5 @@
 {
-  "name": "reforge",
+  "name": "Spam-Mailer",
   "private": true,
   "version": "1.1.0",
   "type": "module",
@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-notifications-component": "^4.0.1"
   },
   "devDependencies": {
     "@ant-design/pro-components": "^2.6.4",

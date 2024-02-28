@@ -31,7 +31,7 @@ const About = () => {
               v{packageVersion}
             </p>
             <h1 className="font-display text-3xl tracking-tight text-slate-900">
-              Reforge
+              Spam-Mailer
             </h1>
           </header>
           <div>
@@ -46,7 +46,7 @@ const About = () => {
                   <AiFillGithub className="text-4xl opacity-90" />
                   <h2 className="mt-4 font-display text-base text-slate-900">
                     <a
-                      href="https://github.com/arifszn/reforge"
+                      href="https://github.com/arifszn/Spam-Mailer"
                       target="_blank"
                       rel="noreferrer"
                       className="hover:text-primary"
@@ -66,7 +66,7 @@ const About = () => {
                   <AiOutlineBug className="text-4xl opacity-90" />
                   <h2 className="mt-4 font-display text-base text-slate-900">
                     <a
-                      href="https://github.com/arifszn/reforge/issues"
+                      href="https://github.com/arifszn/Spam-Mailer/issues"
                       target="_blank"
                       rel="noreferrer"
                       className="hover:text-primary"
@@ -86,7 +86,7 @@ const About = () => {
                   <FaRegLightbulb className="text-4xl opacity-90" />
                   <h2 className="mt-4 font-display text-base text-slate-900">
                     <a
-                      href="https://github.com/arifszn/reforge/discussions/categories/ideas"
+                      href="https://github.com/arifszn/Spam-Mailer/discussions/categories/ideas"
                       target="_blank"
                       rel="noreferrer"
                       className="hover:text-primary"
@@ -106,7 +106,7 @@ const About = () => {
                   <AiOutlineHeart className="text-4xl opacity-90" />
                   <h2 className="mt-4 font-display text-base text-slate-900">
                     <a
-                      href="https://github.com/arifszn/reforge/blob/main/CONTRIBUTING.md"
+                      href="https://github.com/arifszn/Spam-Mailer/blob/main/CONTRIBUTING.md"
                       target="_blank"
                       rel="noreferrer"
                       className="hover:text-primary"

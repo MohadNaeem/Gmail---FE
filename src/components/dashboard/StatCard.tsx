@@ -9,7 +9,7 @@ const { Text } = Typography;
 interface StatCardProps {
   icon: React.ReactNode;
   title: string;
-  number: number;
+  number: any;
   loading: boolean;
   link?: string;
   isCard?: boolean;
@@ -22,7 +22,7 @@ const StatCard = ({
   link,
   loading = false,
   isCard = true,
-}: StatCardProps) => {
+}: any) => {
   const navigate = useNavigate();
 
   const children = (

@@ -1,6 +1,8 @@
 import { Toaster } from 'sonner';
 import { RouterProvider } from 'react-router-dom';
 import { browserRouter } from './routes/browserRouter';
+import ReactNotification from 'react-notifications-component';
+
 
 function App() {
   return (

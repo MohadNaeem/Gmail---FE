@@ -8,16 +8,16 @@
   <h4 align="center">An out-of-box UI solution for enterprise applications as a React boilerplate.</h4>
 
   <p align="center">
-    <a href="https://reforge.netlify.app"><b>Demo</b></a>
+    <a href="https://Spam-Mailer.netlify.app"><b>Demo</b></a>
     ·
-    <a href="https://github.com/arifszn/reforge/issues"><b>Report Bug</b></a>
+    <a href="https://github.com/arifszn/Spam-Mailer/issues"><b>Report Bug</b></a>
     ·
-    <a href="https://github.com/arifszn/reforge/discussions/categories/ideas"><b>Request Feature</b></a>
+    <a href="https://github.com/arifszn/Spam-Mailer/discussions/categories/ideas"><b>Request Feature</b></a>
   </p>
 </p>
 
 <p align="center">
-  <a href="https://reforge.netlify.app">
+  <a href="https://Spam-Mailer.netlify.app">
     <img src="https://user-images.githubusercontent.com/45073703/235440010-065d07a1-f387-4f0b-a3a2-879b2d62d1d4.gif" alt="Preview" width="60%"/>
   </a>
   <br/>
@@ -41,7 +41,7 @@
 
 ## Demo
 
-https://reforge.netlify.app
+https://Spam-Mailer.netlify.app
 
 ### Credentials
 
@@ -53,8 +53,8 @@ https://reforge.netlify.app
 - Clone the project and change directory.
 
   ```shell
-  git clone https://github.com/arifszn/reforge.git
-  cd reforge
+  git clone https://github.com/arifszn/Spam-Mailer.git
+  cd Spam-Mailer
   ```
 
 - Install dependencies.
@@ -78,8 +78,8 @@ Settings including app name, theme color, meta tags, etc. can be controlled from
 ```ts
 //config.ts
 const CONFIG = {
-  appName: 'Reforge',
-  helpLink: 'https://github.com/arifszn/reforge',
+  appName: 'Spam-Mailer',
+  helpLink: 'https://github.com/arifszn/Spam-Mailer',
   enablePWA: true,
   theme: {
     accentColor: '#818cf8',
@@ -87,7 +87,7 @@ const CONFIG = {
     showBreadcrumb: true,
   },
   metaTags: {
-    title: 'Reforge',
+    title: 'Spam-Mailer',
     description:
       'An out-of-box UI solution for enterprise applications as a React boilerplate.',
     imageURL: 'logo.svg',
@@ -100,14 +100,14 @@ export default CONFIG;
 ## Support
 
 <p>You can show your support by starring this project. ★</p>
-<a href="https://github.com/arifszn/reforge/stargazers">
-  <img src="https://img.shields.io/github/stars/arifszn/reforge?style=social" alt="Github Star">
+<a href="https://github.com/arifszn/Spam-Mailer/stargazers">
+  <img src="https://img.shields.io/github/stars/arifszn/Spam-Mailer?style=social" alt="Github Star">
 </a>
 
 ## Contribute
 
-To contribute, see the [Contributing guide](https://github.com/arifszn/reforge/blob/main/CONTRIBUTING.md).
+To contribute, see the [Contributing guide](https://github.com/arifszn/Spam-Mailer/blob/main/CONTRIBUTING.md).
 
 ## License
 
-[MIT](https://github.com/arifszn/reforge/blob/main/LICENSE)
+[MIT](https://github.com/arifszn/Spam-Mailer/blob/main/LICENSE)

@@ -9,16 +9,4 @@ export const sidebar = [
     name: 'Dashboard',
     icon: <Icon component={BiHomeAlt2} />,
   },
-  {
-    path: webRoutes.users,
-    key: webRoutes.users,
-    name: 'Users',
-    icon: <UserOutlined />,
-  },
-  {
-    path: webRoutes.about,
-    key: webRoutes.about,
-    name: 'About',
-    icon: <InfoCircleOutlined />,
-  },
 ];

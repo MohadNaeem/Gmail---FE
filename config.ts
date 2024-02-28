@@ -7,8 +7,8 @@ enum LayoutType {
 }
 
 const CONFIG = {
-  appName: 'Reforge',
-  helpLink: 'https://github.com/arifszn/reforge',
+  appName: 'Spam-Mailer',
+  helpLink: 'https://github.com/arifszn/Spam-Mailer',
   enablePWA: true,
   theme: {
     accentColor: '#818cf8',
@@ -16,7 +16,7 @@ const CONFIG = {
     showBreadcrumb: true,
   },
   metaTags: {
-    title: 'Reforge',
+    title: 'Spam-Mailer',
     description:
       'An out-of-box UI solution for enterprise applications as a React boilerplate.',
     imageURL: 'logo.svg',
