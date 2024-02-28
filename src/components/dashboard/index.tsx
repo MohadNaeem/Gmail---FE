@@ -213,7 +213,7 @@ const Dashboard = () => {
       </Row>
       <Row gutter={24}>
         <Col
-          xl={12}
+          xl={18}
           lg={24}
           md={24}
           sm={24}
