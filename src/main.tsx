@@ -17,7 +17,7 @@ const persistor = persistStore(store);
 injectStore(store);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ConfigProvider {...antdConfig}>
       <ReactNotifications />
       <Provider store={store}>
@@ -26,5 +26,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         </PersistGate>
       </Provider>
     </ConfigProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

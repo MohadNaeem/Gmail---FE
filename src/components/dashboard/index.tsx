@@ -49,66 +49,16 @@ const Dashboard = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [dashboardData, setDashboardData] = useState<any>({});
   const [isSendingLoading, setIsSendingLoading] = useState(false);
+  const [messagesIds, setMessagesIds] = useState([]);
   const [isDashboardloading, setIsDashboardLoading] = useState(false);
-
-  // useEffect(() => {
-  //   Promise.all([loadUsers(), loadReviews()])
-  //     .then(() => {
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       handleErrorResponse(error);
-  //     });
-  // }, []);
-
-  // const loadUsers = () => {
-  //   return http
-  //     .get(apiRoutes.users, {
-  //       params: {
-  //         per_page: 4,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       setUsers(response.data.data);
-  //     })
-  //     .catch((error) => {
-  //       handleErrorResponse(error);
-  //     });
-  // };
-
-  // const loadReviews = () => {
-  //   return http
-  //     .get(apiRoutes.reviews, {
-  //       params: {
-  //         per_page: 5,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       setReviews(
-  //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //         response.data.data.map((rawReview: any) => {
-  //           const review: Review = {
-  //             id: rawReview.id,
-  //             title: rawReview.name,
-  //             color: rawReview.color,
-  //             year: rawReview.year,
-  //             star: Math.floor(Math.random() * 5) + 1,
-  //           };
-
-  //           return review;
-  //         })
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       handleErrorResponse(error);
-  //     });
-  // };
 
   const getDashoardData = async () => {
     setLoading(true);
     // setIsDashboardLoading(true);
     try {
       const data = await axios.get(`${baseURL}/mail/spam`);
+      const messagesData = await axios.get(`${baseURL}/mail/messages`);
+      setMessagesIds(messagesData?.data?.messages);
       setDashboardData(data.data);
     } catch (error) {
     } finally {
@@ -120,38 +70,46 @@ const Dashboard = () => {
   const sendReplies = async () => {
     try {
       setIsSendingLoading(true);
-      const data = await axios.get(`${baseURL}/mail/messages`);
-      // if(data.status)
-      await getDashoardData();
-      if (data.status === 200) {
-        Store.addNotification({
-          title: 'Success!',
-          message: 'All Messages have been replied.',
-          type: 'success',
-          insert: 'top',
-          container: 'top-right',
-          animationIn: ['animate__animated', 'animate__fadeIn'],
-          animationOut: ['animate__animated', 'animate__fadeOut'],
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
-      } else {
-        Store.addNotification({
-          title: 'Failed!',
-          message: 'Unexpected error occured.',
-          type: 'danger',
-          insert: 'top',
-          container: 'top-right',
-          animationIn: ['animate__animated', 'animate__fadeIn'],
-          animationOut: ['animate__animated', 'animate__fadeOut'],
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
-      }
+      // const borderCountr = await Promise.all(
+      //   messagesIds.map(async (message: any) => {
+      //     const data = await axios.post(
+      //       `${baseURL}/mail/send-message/${message?.id}`
+      //     );
+      //     console.log(data);
+      //     // if(data.status)
+      //     // await getDashoardData();
+      //     if (data.status === 200) {
+      //       Store.addNotification({
+      //         title: 'Success!',
+      //         message: 'All Messages have been replied.',
+      //         type: 'success',
+      //         insert: 'top',
+      //         container: 'top-right',
+      //         animationIn: ['animate__animated', 'animate__fadeIn'],
+      //         animationOut: ['animate__animated', 'animate__fadeOut'],
+      //         dismiss: {
+      //           duration: 5000,
+      //           onScreen: true,
+      //         },
+      //       });
+      //     } else {
+      //       Store.addNotification({
+      //         title: 'Failed!',
+      //         message: 'Unexpected error occured.',
+      //         type: 'danger',
+      //         insert: 'top',
+      //         container: 'top-right',
+      //         animationIn: ['animate__animated', 'animate__fadeIn'],
+      //         animationOut: ['animate__animated', 'animate__fadeOut'],
+      //         dismiss: {
+      //           duration: 5000,
+      //           onScreen: true,
+      //         },
+      //       });
+      //     }
+      //   })
+      // );
+      fetchDataSequentially(messagesIds);
     } catch (error) {
       Store.addNotification({
         title: 'Failed!',
@@ -167,9 +125,76 @@ const Dashboard = () => {
         },
       });
     } finally {
-      setIsSendingLoading(false);
+      // setIsSendingLoading(false);
     }
   };
+
+  async function fetchDataSequentially(ids: any) {
+    setIsSendingLoading(true);
+    let iterator = 0;
+    try {
+      for (const id of ids) {
+        iterator++;
+        const data = await axios.post(`${baseURL}/mail/send-message/${id?.id}`);
+        // if(data.status)
+        // await getDashoardData();
+        if (data.status === 200) {
+          const headers = data?.data?.payload?.headers;
+          const fromHeader = headers?.find(
+            (header: any) => header.name === 'From'
+          );
+          Store.addNotification({
+            title: 'Success!',
+            message: `Message sent to ${fromHeader?.value}`,
+            type: 'success',
+            insert: 'top',
+            container: 'top-right',
+            animationIn: ['animate__animated', 'animate__fadeIn'],
+            animationOut: ['animate__animated', 'animate__fadeOut'],
+            dismiss: {
+              duration: 5000,
+              onScreen: true,
+            },
+          });
+        } else if (data.status === 205) {
+          Store.addNotification({
+            title: 'Success!',
+            message: `Skipped beacuse recipent doesnt support reply.`,
+            type: 'warning',
+            insert: 'top',
+            container: 'top-right',
+            animationIn: ['animate__animated', 'animate__fadeIn'],
+            animationOut: ['animate__animated', 'animate__fadeOut'],
+            dismiss: {
+              duration: 5000,
+              onScreen: true,
+            },
+          });
+        } else {
+          Store.addNotification({
+            title: 'Failed!',
+            message: 'Unexpected error occured.',
+            type: 'danger',
+            insert: 'top',
+            container: 'top-right',
+            animationIn: ['animate__animated', 'animate__fadeIn'],
+            animationOut: ['animate__animated', 'animate__fadeOut'],
+            dismiss: {
+              duration: 5000,
+              onScreen: true,
+            },
+          });
+        }
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        if (iterator === ids.length) {
+          setIsSendingLoading(false);
+        }
+      }
+    } catch (error) {
+      setIsSendingLoading(false);
+      console.error('Error fetching data:', error);
+    }
+  }
 
   useEffect(() => {
     getDashoardData();
@@ -225,16 +250,16 @@ const Dashboard = () => {
             <Button
               onClick={sendReplies}
               style={{ marginRight: '20px', marginLeft: '20px' }}
-              disabled={
-                dashboardData?.spam?.messagesUnread === 0 ||
-                dashboardData?.spam?.messagesUnread === null ||
-                dashboardData?.spam?.messagesUnread === undefined ||
-                isNaN(dashboardData?.spam?.messagesUnread)
-              }
+              // disabled={
+              //   dashboardData?.spam?.messagesUnread === 0 ||
+              //   dashboardData?.spam?.messagesUnread === null ||
+              //   dashboardData?.spam?.messagesUnread === undefined ||
+              //   isNaN(dashboardData?.spam?.messagesUnread)
+              // }
             >
               {isSendingLoading ? (
                 <Spin
-                  size="large"
+                  size="default"
                   indicator={<ImSpinner2 className="icon-spin" />}
                 />
               ) : (
